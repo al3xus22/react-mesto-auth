@@ -1,10 +1,14 @@
 .header {
+  color: #FFFFFF;
   padding: 45px 0 38px;
   margin: 0 auto;
   max-width: calc(1280px - 2*200px);
   min-height: 56px;
   border-bottom: 1px solid rgb(84, 84, 84, 0.7);
   box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
 }
 
 @media screen and (max-width: 900px) {

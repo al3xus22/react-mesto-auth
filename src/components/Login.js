@@ -1,0 +1,62 @@
+import React, {useState} from 'react';
+import * as auth from "../utils/Auth";
+import {useNavigate} from 'react-router-dom';
+
+function Login({handleLogin}) {
+  const [formValue, setFormValue] = useState({
+      email: '',
+      password: ''
+    }
+  )
+  const [errorMessage, setErrorMessage] = useState()
+  const navigate = useNavigate();
+  const handleChange = (e) => {
+    const {name, value} = e.target;
+    setFormValue({
+      ...formValue,
+      [name]: value
+    });
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!formValue.email || !formValue.password) {
+      setErrorMessage('Both fields are required');
+      return;
+    }
+    const {email, password} = formValue;
+    auth.authorize({email, password})
+      .then((data) => {
+        if (data.token) {
+          localStorage.setItem('jwt', data.token);
+          handleLogin();
+          navigate('/main', {replace: true});
+        }
+      })
+      .catch((err) => setErrorMessage(err));
+  }
+
+
+  return (
+    <div className="login">
+      <p className="login__welcome">
+        Вход
+      </p>
+      <div className="register__error">{errorMessage}</div>
+      <form className="login__form" onSubmit={handleSubmit}>
+        <input type="text" value={formValue.email} onChange={handleChange} id="email" placeholder="Email"
+               name="email"
+               minLength="2" maxLength="40"/>
+        <span className="login__error"></span>
+        <input type="text" value={formValue.password} onChange={handleChange} id="password" placeholder="Пароль"
+               name="password"
+               minLength="2" maxLength="200"/>
+        <span className="login__error"></span>
+        <button type="submit" className="login__link">Войти</button>
+      </form>
+    </div>
+  )
+}
+
+export default Login;
