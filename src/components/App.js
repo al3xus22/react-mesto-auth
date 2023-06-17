@@ -39,25 +39,15 @@ function App() {
   const [cardId, setCardId] = React.useState('');
 
   React.useEffect(() => {
-    api.getUserInfo()
-      .then((data) => {
-        setCurrentUser(data)
+    loggedIn && Promise.all([api.getUserInfo(), api.getInitialCards()])
+      .then(([user, cards]) => {
+        setCurrentUser(user)
+          setCards(cards);
       })
       .catch((error) => {
         console.log(error)
       });
-  }, [])
-
-  React.useEffect(() => {
-    api.getInitialCards()
-      .then((data) => {
-        setCards(data);
-      })
-      .catch
-      ((error) => {
-        console.log(error)
-      });
-  }, []);
+  }, [loggedIn])
 
   const registerUser = ({email, password}) => {
     auth.register({email, password})
@@ -75,8 +65,18 @@ function App() {
       });
   }
 
-  const handleLogin = () => {
-    setLoggedIn(true);
+  const handleLogin = (formValue) => {
+    const { password, email } = formValue;
+    auth.authorize({email, password})
+      .then((data) => {
+        if (data.token) {
+          setUserEmail(email);
+          localStorage.setItem('jwt', data.token);
+          setLoggedIn(true);
+          navigate('/main', {replace: true});
+        }
+      })
+      .catch((err) => console.log(err));
   }
 
   const handleSignOut = () => {
@@ -228,7 +228,7 @@ function App() {
               />
             }
             />
-            <Route path="/signin" element={<Login handleLogin={handleLogin}/>}/>
+            <Route path="/signin" element={<Login onLogin={handleLogin}/>}/>
             <Route path="/signup" element={<Register registerUser={registerUser}/>}/>
             <Route path='*' element={<PageNotFound/>}/>
           </Routes>

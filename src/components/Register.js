@@ -37,7 +37,7 @@ function Register({registerUser}) {
                name="email"
                minLength="2" maxLength="40"/>
         <span className="register__error"></span>
-        <input type="text" value={formValue.password} onChange={handleChange} id="password" placeholder="Пароль"
+        <input type="password" value={formValue.password} onChange={handleChange} id="password" placeholder="Пароль"
                name="password"
                minLength="2" maxLength="200"/>
         <span className="register__error"></span>

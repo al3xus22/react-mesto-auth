@@ -23,7 +23,6 @@ function Card(props) {
   }
 
   return (
-    <>
       <li className="element">
         {isOwn && <button className='element__trash' onClick={handleDeleteClick}/>}
         <img src={props.card.link} alt={props.card.name} className="element__image" onClick={handleClick}/>
@@ -35,7 +34,6 @@ function Card(props) {
           </div>
         </div>
       </li>
-    </>
   )
 }
 

@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import * as auth from "../utils/Auth";
 import {useNavigate} from 'react-router-dom';
 
-function Login({handleLogin}) {
+function Login({onLogin}) {
   const [formValue, setFormValue] = useState({
       email: '',
       password: ''
@@ -25,16 +25,10 @@ function Login({handleLogin}) {
       setErrorMessage('Both fields are required');
       return;
     }
-    const {email, password} = formValue;
-    auth.authorize({email, password})
-      .then((data) => {
-        if (data.token) {
-          localStorage.setItem('jwt', data.token);
-          handleLogin();
-          navigate('/main', {replace: true});
-        }
-      })
-      .catch((err) => setErrorMessage(err));
+    onLogin({
+      email: formValue.email,
+      password: formValue.password
+    });
   }
 
 
@@ -49,7 +43,7 @@ function Login({handleLogin}) {
                name="email"
                minLength="2" maxLength="40"/>
         <span className="login__error"></span>
-        <input type="text" value={formValue.password} onChange={handleChange} id="password" placeholder="Пароль"
+        <input type="password" value={formValue.password} onChange={handleChange} id="password" placeholder="Пароль"
                name="password"
                minLength="2" maxLength="200"/>
         <span className="login__error"></span>
